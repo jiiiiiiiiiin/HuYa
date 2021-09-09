@@ -52,7 +52,7 @@ class HuYa:
 
 
     def into_room(self, room_id, n):
-        s = self.get_hul()
+        s = int(self.get_hul())
         print("The remaining HL is {}".format(s))
         if s < n and s != 0:
             n = s
