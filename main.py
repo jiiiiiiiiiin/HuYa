@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     # 如果希望下次使用的时候不登录，可以把chrome data保存，但是只能同一时间同一个浏览器用
     # 如果有多个用户也可以保存多个chrome data
-    path_chrome_data = os.getcwd() + '\\chromeData'
+    path_chrome_data = os.getcwd() + '/chromeData'
     if not Path(path_chrome_data).exists():
         os.mkdir(path_chrome_data)
     chrome_options.add_argument(r'user-data-dir=' + path_chrome_data)

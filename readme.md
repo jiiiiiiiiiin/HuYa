@@ -15,7 +15,7 @@ hy.into_room(518511, 20)			#  房间号， 发放虎粮数目
 - 如果需要多个账号登陆，需要把这里的代码。(自己看着改吧
 
   ```python
-  path_chrome_data = os.getcwd() + '\\chromeData'
+  path_chrome_data = os.getcwd() + '/chromeData'
   if not Path(path_chrome_data).exists():
       os.mkdir(path_chrome_data)
   chrome_options.add_argument(r'user-data-dir=' + path_chrome_data)
