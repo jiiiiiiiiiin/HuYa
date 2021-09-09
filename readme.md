@@ -23,7 +23,7 @@ hy.into_room(518511, 20)			#  房间号， 发放虎粮数目
 
 - 运行需要`chromedriver`。
 
-- 定时使用`crontab`， `0 8 * * * python main.py >> huya.log >> 2>&1`。
+- 定时使用`crontab`， `0 8 * * * python main.py >> huya.log 2>&1`。
 
 - linux下selenium环境
 
