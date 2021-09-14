@@ -154,5 +154,5 @@ if __name__ == '__main__':
     hy.into_room(518512, 70)
     hy.into_room(518511, 20)
 
-    # driver.quit()
+    driver.quit()
 
