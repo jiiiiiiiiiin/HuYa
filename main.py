@@ -92,15 +92,16 @@ class HuYa:
         # 进入充值页面查询虎粮
         self.driver.get("https://hd.huya.com/pay/index.html?source=web")
         self.driver.implicitly_wait(2)  # 等待跳转
+        self.driver.execute_script('document.getElementsByClassName("nav")[0].getElementsByTagName("li")[4].click();')
+        time.sleep(1)
         n = self.driver.execute_script('''
-            document.getElementsByClassName("nav")[0].getElementsByTagName("li")[4].click()
             lis = document.getElementsByTagName("li");
             for(var i=0;i<lis.length;i++){
                 if(lis[i].title.search("虎粮") != -1){
                     return lis[i].getAttribute("data-num");
                 }
             } 
-            return 0;                                               
+            return 0;
         ''')
 
         print("number of HL:{}".format(n))
@@ -153,6 +154,5 @@ if __name__ == '__main__':
     hy.into_room(518512, 70)
     hy.into_room(518511, 20)
 
-
-    driver.quit()
+    # driver.quit()
 
