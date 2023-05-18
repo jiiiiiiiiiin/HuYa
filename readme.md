@@ -1,6 +1,7 @@
 # 虎粮自动发放
 
 用于虎牙直播平台，自动发放用户虎粮。
+> 由与虎牙前端更新等情况，有可能会出现误送礼物，请谨慎使用！出现不可控情况概不负责！
 
 ## 使用说明
 
@@ -9,7 +10,7 @@ hy.login(username="", password="")  #  填写账号
 hy.into_room(518512, 70)			#  房间号， 发放虎粮数目
 hy.into_room(518511, 20)			#  房间号， 发放虎粮数目
 ```
-
+- 建议第一次使用的时候，将`debug = True`
 - 第一次登陆会需要进行扫码登陆，二维码保存在代码路径下，名为`qr-username.png`，打开扫码登陆即可；或者打开输出的`QR-code url:xxxxx`也可以。
 
 - 如果需要多个账号登陆，需要把这里的代码。(自己看着改吧
@@ -21,7 +22,7 @@ hy.into_room(518511, 20)			#  房间号， 发放虎粮数目
   chrome_options.add_argument(r'user-data-dir=' + path_chrome_data)
   ```
 
-- 运行需要`chromedriver`。
+- 运行需要[`chromedriver`](https://registry.npmmirror.com/binary.html?path=chromedriver/)(选择符合你浏览器的版本下载)。
 
 - 定时使用`crontab`， `0 8 * * * python main.py >> huya.log 2>&1`。
 
@@ -41,3 +42,9 @@ hy.into_room(518511, 20)			#  房间号， 发放虎粮数目
   ```
 
   > [**518512 nb**](https://huya.com/518512)
+
+
+## 更新
+
+ - 修复了由于selenium新版本，导致的代码不可用的错误。（所有元素查找都已用js重写）
+ - 修复了虎牙网页更新导致虎粮找不到或误送礼物的错误。

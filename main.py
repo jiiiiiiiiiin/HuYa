@@ -4,6 +4,7 @@ import requests
 from pathlib import Path
 
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 
@@ -14,7 +15,10 @@ class HuYa:
 
     def login_check(self):
         try:
-            status = self.driver.find_elements_by_class_name("uesr_n")
+            js = '''
+                return document.getElementsByClassName("uesr_n")
+            '''
+            status = self.driver.execute_script(js)
         except:
             status = []
         if len(status) == 1:
@@ -48,6 +52,7 @@ class HuYa:
             print("user:{} login requires authentication, you have to scan the QR code to sign in.\nQR-code url:{}".format(username, qr_url))
             self.get_qr(username, qr_url)
             while not self.login_check():
+                print(self.login_check())
                 time.sleep(0.1)
 
 
@@ -64,18 +69,33 @@ class HuYa:
         self.driver.implicitly_wait(2)  # 等待跳转
         print("Enter room:{}".format(room_id))
         time.sleep(2)
-        gift_hl_id = self.driver.execute_script('''
-            gifts = document.getElementsByClassName("player-face-gift");
-            var gift_hl_id = 0;
-            for(var i=0;i<gifts.length;i++){
-                propsid = gifts[i].getAttribute("propsid");
-                if(propsid == 4){
-                    gift_hl_id = i;
-                    break;
+
+
+        self.driver.execute_script("document.getElementsByClassName('player-face-arrow')[0].click()")
+        time.sleep(0.5)
+        try_times = 5
+        while True:
+            gift_hl_id = self.driver.execute_script('''
+                gifts = document.getElementsByClassName("gift-panel-item");
+                var gift_hl_id = 0;
+                for(var i=0;i<gifts.length;i++){
+                    propsid = gifts[i].getAttribute("propsid");
+                    if(propsid === "4"){
+                        gift_hl_id = i;
+                        break;
+                    }
                 }
-            }
-            return gift_hl_id;
-        ''')
+                return gift_hl_id;
+            ''')
+            if gift_hl_id != 0:
+                break
+            else:
+                try_times -= 1
+                time.sleep(1)
+            if try_times == 0:
+                print("room:{} send failure".format(room_id))
+                return False
+        print("gift_hl_id", gift_hl_id)
 
         for i in range(n):
             self.driver.execute_script('''
@@ -126,18 +146,20 @@ class HuYa:
 
 
 if __name__ == '__main__':
+    debug = False
     chrome_options = Options()
-    chrome_options.add_argument('--headless')  # 无头模式
-    chrome_options.add_argument("--ignore-certificate-errors")  # 忽略证书错误
-    chrome_options.add_argument("--disable-popup-blocking")  # 禁用弹出拦截
-    chrome_options.add_argument("no-sandbox")  # 取消沙盒模式
-    chrome_options.add_argument("no-default-browser-check")  # 禁止默认浏览器检查
-    chrome_options.add_argument("disable-extensions")  # 禁用扩展
-    chrome_options.add_argument("disable-glsl-translator")  # 禁用GLSL翻译
-    chrome_options.add_argument("disable-translate")  # 禁用翻译
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--hide-scrollbars")  # 隐藏滚动条, 应对一些特殊页面
-    chrome_options.add_argument("blink-settings=imagesEnabled=false")  # 不加载图片, 提升速度
+    if not debug:
+        chrome_options.add_argument('--headless')  # 无头模式
+        chrome_options.add_argument("--ignore-certificate-errors")  # 忽略证书错误
+        chrome_options.add_argument("--disable-popup-blocking")  # 禁用弹出拦截
+        chrome_options.add_argument("no-sandbox")  # 取消沙盒模式
+        chrome_options.add_argument("no-default-browser-check")  # 禁止默认浏览器检查
+        chrome_options.add_argument("disable-extensions")  # 禁用扩展
+        chrome_options.add_argument("disable-glsl-translator")  # 禁用GLSL翻译
+        chrome_options.add_argument("disable-translate")  # 禁用翻译
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--hide-scrollbars")  # 隐藏滚动条, 应对一些特殊页面
+        chrome_options.add_argument("blink-settings=imagesEnabled=false")  # 不加载图片, 提升速度
 
     # 如果希望下次使用的时候不登录，可以把chrome data保存，但是只能同一时间同一个浏览器用
     # 如果有多个用户也可以保存多个chrome data
@@ -151,8 +173,7 @@ if __name__ == '__main__':
     hy = HuYa(driver)
 
     hy.login(username="", password="")
-    hy.into_room(518512, 70)
-    hy.into_room(518511, 20)
+    hy.into_room(518512, 2)
+    hy.into_room(518511, 2)
 
     driver.quit()
-
