@@ -85,7 +85,7 @@ class HuYa:
 
         total_hl = int(self.get_hl())
         print("The remaining HL is {}".format(total_hl))
-        if total_hl == 0 | send_hl <= 0:
+        if total_hl == 0 or send_hl <= 0:
             return False
         elif total_hl < send_hl:
             send_hl = total_hl
